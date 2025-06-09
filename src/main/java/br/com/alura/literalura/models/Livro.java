@@ -10,7 +10,8 @@ public class Livro {
     private Long id;
     @Column(unique = true)
     private String titulo;
-    private String idioma;
+    @Enumerated(EnumType.STRING)
+    private EIdioma idioma;
     private Integer totalDownloads;
     @ManyToOne
     private Autor autor;
@@ -19,7 +20,7 @@ public class Livro {
 
     public Livro(DadosLivro dados){
         this.titulo = dados.titulo();
-        this.idioma = dados.idioma().get(0);
+        this.idioma = EIdioma.valueOf(dados.idioma().get(0).toUpperCase());
         this.totalDownloads = dados.downloads();
         this.autor = new Autor(dados.autor().get(0));
     }
@@ -40,11 +41,11 @@ public class Livro {
         this.titulo = titulo;
     }
 
-    public String getIdioma() {
+    public EIdioma getIdioma() {
         return idioma;
     }
 
-    public void setIdioma(String idioma) {
+    public void setIdioma(EIdioma idioma) {
         this.idioma = idioma;
     }
 

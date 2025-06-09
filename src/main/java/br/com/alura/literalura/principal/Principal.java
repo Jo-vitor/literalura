@@ -23,6 +23,7 @@ public class Principal {
 
     public Principal(AutorRepository autorRepositorio, LivroRepository livroRepositorio) {
         this.autorRepositorio = autorRepositorio;
+        this.livroRepositorio = livroRepositorio;
     }
 
     public void exibirMenu() {
@@ -36,6 +37,7 @@ public class Principal {
                     3 - Listar autores registrados
                     4 - Listar autores vivos em um determinado ano
                     5 - Listar livros em um determinado idioma
+                    6 - Listar top 10
                     
                     0 - Sair
                     ********************************
@@ -53,6 +55,15 @@ public class Principal {
                     break;
                 case 3:
                     listarAutores();
+                    break;
+                case 4:
+                    listarAutoresVivosPorAno();
+                    break;
+                case 5:
+                    listarLivrosPorIdioma();
+                    break;
+                case 6:
+                    listarTop10();
                     break;
                 case 0:
                     System.out.println("Saindo do Sistema...");
@@ -105,5 +116,37 @@ public class Principal {
         List<Autor> autores = autorRepositorio.findAll();
 
         autores.forEach(System.out::println);
+    }
+
+    private void listarAutoresVivosPorAno() {
+        System.out.println("Digite o ano que deseja buscar");
+        int ano = leitura.nextInt();
+
+        List<Autor> autoresVivos = autorRepositorio.buscarAutorVivoPorDeterminadoAno(ano);
+
+        autoresVivos.forEach(System.out::println);
+    }
+
+    private void listarLivrosPorIdioma(){
+        System.out.println("""
+                Digite o idioma que deseja buscar
+                pt - português
+                en - inglês
+                fr - francês
+                es - espanhol
+                """);
+        String idiomaDigitado = leitura.nextLine();
+
+        EIdioma idioma = EIdioma.valueOf(idiomaDigitado.toUpperCase());
+
+        List<Livro> livrosPorIdioma = livroRepositorio.findByIdioma(idioma);
+
+        livrosPorIdioma.forEach(System.out::println);
+    }
+
+    private void listarTop10(){
+        List<Livro> top10 = livroRepositorio.findTop10ByOrderByTotalDownloadsDesc();
+
+        top10.forEach(System.out::println);
     }
 }
